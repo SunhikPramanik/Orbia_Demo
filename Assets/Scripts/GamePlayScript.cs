@@ -6,14 +6,9 @@ using UnityEngine.UI;
 
 public class GamePlayScript : MonoBehaviour
 {
+    #region Variables
     [SerializeField]
     private GameObject player;
-   /* [SerializeField]
-    private GameObject ring1;
-    [SerializeField]
-    private GameObject ring2;
-    [SerializeField]
-    private GameObject ring3;*/
     [SerializeField]
     private GameObject points;
     [SerializeField]
@@ -21,30 +16,32 @@ public class GamePlayScript : MonoBehaviour
     [SerializeField]
     private GameObject gameOverText;
     [SerializeField]
-    private GameObject[] ringPrefab = new GameObject[3];
+    private GameObject ring1;
+    [SerializeField]
+    private GameObject ring2;
+    [SerializeField]
+    private GameObject ring3;
+    [SerializeField]
+    private GameObject ring4;
     public List<GameObject> EnemyPrefabs = new List<GameObject>();
 
     private bool isGameOver;
     private float ringSpawnDis;
     private GameObject ring;
+    private int tempEnemy=0;
 
-    private float X_position=0;
-    private float Y_position=0;
-    private int ran=0;
+    private float X_position=2;
+    private float Y_position=1;
+    private int ran=2;
     private int val=0;
     private int score = 0;
     private bool isMoving=false;
+    #endregion
 
-
-    // Start is called before the first frame update
     void Start()
     {
         isGameOver = false;
-        ring = ringPrefab[0];
-        /*for(int i=0; i < EnemyPrefabs.Count; i++)
-        {
-            Instantiate(EnemyPrefabs[i], new Vector3(100, 100, 100), Quaternion.identity);
-        }*/
+        ring = ring1;
     }
 
     // Update is called once per frame
@@ -60,10 +57,16 @@ public class GamePlayScript : MonoBehaviour
         }
         if(player.transform.position == ring.transform.position && isGameOver == false)
         {
+            Debug.Log("Temp:"+tempEnemy);
+            EnemyPrefabs[tempEnemy].transform.position = new Vector3(100,100,100);
             isMoving = false;
-            EnemyPrefabs[ran].transform.position = new Vector3(100, 100, 100);
             val = Random.Range(0, 2);
             repeatRing(val);
+            if (tempEnemy >= 5)
+            {
+                tempEnemy=0;
+            }
+            else tempEnemy++;
         }
         if(Input.GetMouseButton(1))
         {
@@ -76,18 +79,99 @@ public class GamePlayScript : MonoBehaviour
 
     public void repeatRing(int spawnValue)
     {
-        ring = ringPrefab[Random.Range(0, 3)];
-        ringSpawnDis = Mathf.Round(Random.Range(-2.0f, 2.5f));
+        ringSpawnDis = Mathf.Round(Random.Range(2f, 3f));
         Debug.Log(ringSpawnDis);
-        Y_position = Y_position + Random.Range(1, 5);
-        X_position =  ringSpawnDis;
-        ring.transform.position= new Vector3(X_position, Y_position, ring.transform.position.z);
-        ran=Random.Range(0,EnemyPrefabs.Count);
-        EnemyPrefabs[ran].transform.position = new Vector3(X_position, Y_position, ring.transform.position.z);
-        X_position = -X_position;
-        if (spawnValue== 1)
+        if(player.transform.position==ring1.transform.position)
         {
-            points.transform.position=ring.transform.position;
+            Debug.Log("Ran:" + ran);
+            ring = ring2;
+            Y_position = ring3.transform.position.y + Random.Range(2, 5);
+            if (spawnValue == 1)
+            {
+                X_position = ring3.transform.position.x + ringSpawnDis;
+            }
+            else X_position = ring3.transform.position.x - ringSpawnDis;
+            ring4.transform.position = new Vector3(X_position, Y_position, ring3.transform.position.z);
+            if (ran >= 5)
+            {
+                ran = 0;
+            }
+            else ran++;
+            EnemyPrefabs[ran].transform.position = ring4.transform.position;
+            spawnValue = Random.Range(0, 2);
+            if (spawnValue == 1)
+            {
+                points.transform.position = ring4.transform.position;
+            }
+        }
+        if (player.transform.position == ring2.transform.position)
+        {
+            Debug.Log("Ran:" + ran);
+            ring = ring3;
+            Y_position = ring4.transform.position.y + Random.Range(2, 5);
+            if (spawnValue == 1)
+            {
+                X_position = ring4.transform.position.x + ringSpawnDis;
+            }
+            else X_position = ring4.transform.position.x - ringSpawnDis;
+            ring1.transform.position = new Vector3(X_position, Y_position, ring4.transform.position.z);
+            if (ran >= 5)
+            {
+                ran = 0;
+            }
+            else ran++;
+            EnemyPrefabs[ran].transform.position = ring1.transform.position;
+            spawnValue = Random.Range(0, 2);
+            if (spawnValue == 1)
+            {
+                points.transform.position = ring1.transform.position;
+            }
+        }
+        if (player.transform.position == ring3.transform.position)
+        {
+            Debug.Log("Ran:" + ran);
+            ring = ring4;
+            Y_position = ring1.transform.position.y + Random.Range(2, 5);
+            if (spawnValue == 1)
+            {
+                X_position = ring1.transform.position.x + ringSpawnDis;
+            }
+            else X_position = ring1.transform.position.x - ringSpawnDis;
+            ring2.transform.position = new Vector3(X_position, Y_position, ring1.transform.position.z);
+            if (ran >= 5)
+            {
+                ran = 0;
+            }
+            else ran++;
+            EnemyPrefabs[ran].transform.position = ring2.transform.position;
+            spawnValue = Random.Range(0, 2);
+            if (spawnValue == 1)
+            {
+                points.transform.position = ring2.transform.position;
+            }
+        }
+        if (player.transform.position == ring4.transform.position)
+        {
+            Debug.Log("Ran:" + ran);
+            ring = ring1;
+            Y_position = ring2.transform.position.y + Random.Range(2, 5);
+            if (spawnValue == 1)
+            {
+                X_position = ring2.transform.position.x + ringSpawnDis;
+            }
+            else X_position = ring2.transform.position.x - ringSpawnDis;
+            ring3.transform.position = new Vector3(X_position, Y_position, ring2.transform.position.z);
+            if (ran >= 5)
+            {
+                ran = 0;
+            }
+            else ran++;
+            EnemyPrefabs[ran].transform.position = ring3.transform.position;
+            spawnValue = Random.Range(0, 2);
+            if (spawnValue == 1)
+            {
+                points.transform.position = ring3.transform.position;
+            }
         }
     }
 
@@ -102,7 +186,7 @@ public class GamePlayScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Points") && isGameOver == false)
         {
             points.transform.position= new Vector3(100,100,100);
-            score = score+1;
+            score++;
         }
     }
 }
